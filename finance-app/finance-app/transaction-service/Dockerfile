@@ -5,15 +5,15 @@ WORKDIR /app
 COPY go.mod go.sum ./
 RUN go mod download
 COPY . .
-RUN go build -a -installsuffix cgo -o auth-service .
+RUN go build -a -installsuffix cgo -o transaction-service .
 
 FROM alpine:latest
 RUN apk add --no-cache ca-certificates
 WORKDIR /app
-COPY --from=build /app/auth-service /app/auth-service
+COPY --from=build /app/transaction-service /app/transaction-service
 COPY frontend /app/frontend
 COPY .env .env
-EXPOSE 8080
-RUN chmod +x /app/auth-service
-CMD ["./auth-service"]
+EXPOSE 8081
+RUN chmod +x /app/transaction-service
+CMD ["./transaction-service"]
 
