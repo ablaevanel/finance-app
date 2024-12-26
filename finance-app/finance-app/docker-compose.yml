@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  auth-service:
+    build:
+      context: ./auth-service
+      dockerfile: Dockerfile
+    environment:
+      - MONGODB_URI=mongodb://host.docker.internal:27017
+      - JWT_SECRET_KEY=supersecretkey
+    ports:
+      - "8080:8080"
+    networks:
+      - app-network
+
+  transaction-service:
+    build:
+      context: ./transaction-service
+      dockerfile: Dockerfile
+    environment:
+      - MONGODB_URI=mongodb://host.docker.internal:27017
+      - JWT_SECRET_KEY=supersecretkey
+    ports:
+      - "8081:8081"
+    depends_on:
+      - auth-service
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
